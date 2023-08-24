@@ -1,0 +1,66 @@
+# В директорії "django"
+python3 -m venv venv
+source venv/bin/activate
+
+pip install django
+
+django-admin startproject myproject
+cd myproject
+
+pip install python_dotenv
+
+SECRET_KEY=your_secret_key
+DEBUG=True
+
+# myproject/settings.py
+
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+SECRET_KEY = os.getenv('SECRET_KEY')
+DEBUG = os.getenv('DEBUG') == 'True'
+
+pip freeze > requirements.txt
+
+*.pyc
+__pycache__/
+venv/
+db.sqlite3
+.env
+
+python manage.py startapp user
+
+# myproject/urls.py
+
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('users/', include('user.urls')),  # Додайте цей рядок
+]
+
+# user/urls.py
+
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.users_view, name='users'),
+]
+
+# user/views.py
+
+from django.shortcuts import render
+from django.http import HttpResponse
+
+def users_view(request):
+    return HttpResponse("Hello, users!")
+
+python manage.py migrate
+
+python manage.py createsuperuser
+
+python manage.py runserver
