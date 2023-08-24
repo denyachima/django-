@@ -1,0 +1,40 @@
+python manage.py startapp user
+python manage.py startapp book
+python manage.py startapp purchase
+
+# user/models.py
+
+from django.db import models
+
+class User(models.Model):
+    username = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.username
+
+python manage.py makemigrations
+python manage.py migrate
+
+# myproject/urls.py
+
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('users/', include('user.urls')),
+    path('books/', include('book.urls')),
+    path('purchases/', include('purchase.urls')),
+]
+
+# myproject/urls.py
+
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('users/', include('user.urls')),
+    path('books/', include('book.urls')),
+    path('purchases/', include('purchase.urls')),
+]
