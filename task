@@ -1,0 +1,48 @@
+pip install celery redis
+
+# settings.py
+
+# Використання Redis як брокера
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+
+# Додаткові налаштування для Redis
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/1'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+
+pip freeze > requirements.txt
+
+# user/tasks.py
+
+from celery import shared_task
+
+@shared_task
+def print_text(text):
+    print(text)
+
+@shared_task
+def print_user_purchases(user_id):
+    pass
+
+# settings.py
+
+INSTALLED_APPS = [
+    # ...
+    'django_celery_beat',
+]
+
+# ...
+
+CELERY_BEAT_SCHEDULE = {
+    'print-user-count': {
+        'task': 'user.tasks.print_user_count',
+        'schedule': 60,  # Щохвилини
+    },
+}
+
+celery -A your_project_name worker --loglevel=info
+celery -A your_project_name beat --loglevel=info
+
+
