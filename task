@@ -1,0 +1,67 @@
+# user/views.py
+
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+from .models import User
+
+class UserListView(View):
+    template_name = 'user_list.html'
+
+    def get(self, request):
+        users = User.objects.all()
+        return render(request, self.template_name, {'users': users})
+
+class UserDetailView(View):
+    template_name = 'user_detail.html'
+
+    def get(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        return render(request, self.template_name, {'user': user})
+
+# user/views.py
+
+from django.shortcuts import render, redirect
+from django.views import View
+from .models import User
+from .forms import UserForm
+
+class UserCreateView(View):
+    template_name = 'user_create.html'
+
+    def get(self, request):
+        form = UserForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('user_list')
+        return render(request, self.template_name, {'form': form})
+
+# user/urls.py
+
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('users/', views.UserListView.as_view(), name='user_list'),
+    path('users/<int:user_id>/', views.UserDetailView.as_view(), name='user_detail'),
+    path('users/create/', views.UserCreateView.as_view(), name='user_create'),
+]
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create User</button>
+</form>
+
+# user/forms.py
+
+from django import forms
+from .models import User
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = '__all__'
