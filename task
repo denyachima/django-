@@ -1,0 +1,70 @@
+from rest_framework import serializers
+from .models import Model1, Model2, Model3
+
+class Model1Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Model1
+        fields = '__all__'
+
+class Model2Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Model2
+        fields = '__all__'
+
+class Model3Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Model3
+        fields = '__all__'
+
+from rest_framework import viewsets
+from .models import Model1, Model2, Model3
+from .serializers import Model1Serializer, Model2Serializer, Model3Serializer
+
+class Model1ViewSet(viewsets.ModelViewSet):
+    queryset = Model1.objects.all()
+    serializer_class = Model1Serializer
+
+class Model2ViewSet(viewsets.ModelViewSet):
+    queryset = Model2.objects.all()
+    serializer_class = Model2Serializer
+
+class Model3ViewSet(viewsets.ModelViewSet):
+    queryset = Model3.objects.all()
+    serializer_class = Model3Serializer
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 5,
+}
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    pagination_class = CustomPagination
+
+from django_filters import rest_framework as filters
+from .models import Model1, Model2, Model3
+
+class Model1Filter(filters.FilterSet):
+    # Визначте поля, за якими буде здійснюватися фільтрація
+
+class Model2Filter(filters.FilterSet):
+    # Визначте поля, за якими буде здійснюватися фільтрація
+
+class Model3Filter(filters.FilterSet):
+    # Визначте поля, за якими буде здійснюватися фільтрація
+
+class Model1ViewSet(viewsets.ModelViewSet):
+    queryset = Model1.objects.all()
+    serializer_class = Model1Serializer
+    filterset_class = Model1Filter
+
+class Model2ViewSet(viewsets.ModelViewSet):
+    queryset = Model2.objects.all()
+    serializer_class = Model2Serializer
+    filterset_class = Model2Filter
+
+class Model3ViewSet(viewsets.ModelViewSet):
+    queryset = Model3.objects.all()
+    serializer_class = Model3Serializer
+    filterset_class = Model3Filter
