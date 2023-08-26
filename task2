@@ -1,0 +1,20 @@
+# Використовуємо базовий образ Python
+FROM python:3.8
+
+# Встановлюємо залежності проєкту
+COPY requirements.txt /app/requirements.txt
+WORKDIR /app
+RUN pip install -r requirements.txt
+
+# Копіюємо весь проєкт у контейнер
+COPY . /app
+
+# Вказуємо порт, на якому працює додаток Django
+EXPOSE 8000
+
+# Запускаємо додаток
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+docker build -t django-app .
+
+docker run -p 8000:8000 django-app
